@@ -1,26 +1,24 @@
 pipeline {
    agent any
-
+   
+   tools {
+      maven "maven-3.6"
+   }
+   
    stages {
       stage('Compile') {
         steps {
-			withMaven(maven : 'maven-3.6') {
-				sh "mvn clean compile"
-			}           
+			sh "mvn clean compile"          
          }
       }
 	  stage('Unit Testing') {
 		steps {
-			withMaven(maven : 'maven-3.6') {
-				sh "mvn test"
-			}           
+			sh "mvn clean compile"          
          }
 	  }
 	  stage('Install') {
 		steps {
-			withMaven(maven : 'maven-3.6') {
-				sh "mvn install"
-			}           
+			sh "mvn install"        
          }
 	  }
    }
