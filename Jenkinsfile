@@ -6,20 +6,24 @@ pipeline {
    }
    
    stages {
-	   	stage('Compile') {
+	   	stage('Build') {
 		    steps {
-				sh "mvn clean compile"          
+				sh "mvn clean install -Dmaven.test.skip=true"          
 	        }
 	    }
-		stage('Unit Testing') {
+		stage('Unit Test') {
 			steps {
-				sh "mvn clean compile"          
+				sh "mvn test"
 	        }
 		}
-		stage('Install') {
+		stage('Build Docker Image') {
 			steps {
-				sh "mvn install"        
+				sh "docker build -t cvfrans/exam-clientapp ."
+				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
+    				sh "docker login -u cvfrans -p ${dockerHubPwd}"    				
+				}
+				sh "docker push cvfrans/exam-clientapp"				
 	        }
-		}
+		}		
    }
 }
