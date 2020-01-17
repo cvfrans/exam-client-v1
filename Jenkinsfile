@@ -18,7 +18,9 @@ pipeline {
 		}
 		stage('Build Docker Image') {
 			steps {
-				tool name: 'dockerapp', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+				def dockerHome = tool 'dockerApp'
+        		env.PATH = "${dockerHome}/bin:${env.PATH}"
+
 				sh "docker build -t cvfrans/exam-clientapp ."
 				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
     				sh "docker login -u cvfrans -p ${dockerHubPwd}"    				
