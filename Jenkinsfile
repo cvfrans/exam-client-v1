@@ -1,6 +1,5 @@
 pipeline {
-   agent any
-   
+   agent any   
    stages {
 	   	stage('Build') {
 		    steps {
@@ -14,10 +13,11 @@ pipeline {
 		}
 		stage('Build Docker Image') {
 			steps {
-				def appImage = docker.build("clientapp:latest")
-				testImage.inside {
-					sh 'make test'
+				sh "docker build -t cvfrans/exam-clientapp ."
+				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
+    				sh "docker login -u cvfrans -p ${dockerHubPwd}"    				
 				}
+				sh "docker push cvfrans/exam-clientapp"
 	        }
 		}		
    }
