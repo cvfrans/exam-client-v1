@@ -3,9 +3,9 @@ def EC2_PRIVATE_IP = '172.31.24.203'
 def DOCKERHUB_USER = 'cvfrans'
 def IMAGE_NAME = 'exam-clientapp'
 def CONTAINER_NAME = 'apiclient'
-def stopContainer 
-def deleteContainer
-def runContainer
+def stopContainer = '[ -z $(docker ps -f "name=${CONTAINER_NAME}" -aq) ] || docker stop ${CONTAINER_NAME}'
+def deleteContainer = '[ -z $(docker container ls -aq) ] || docker rm ${CONTAINER_NAME}'
+def runContainer = 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${DOCKERHUB_USER}/${IMAGE_NAME}'
 
 pipeline {	
    	agent any
@@ -33,9 +33,6 @@ pipeline {
 		stage('Deploy Container') {
  			steps {
 				sshagent(['aws-ec2-ubuntu-id']) {
-					stopContainer = '[ -z $(docker ps -f "name=${CONTAINER_NAME}" -aq) ] || docker stop ${CONTAINER_NAME}'
-					deleteContainer = '[ -z $(docker container ls -aq) ] || docker rm ${CONTAINER_NAME}'
-					runContainer = 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${DOCKERHUB_USER}/${IMAGE_NAME}'
 	    			
 					sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} '${stopContainer} | ${deleteContainer} | ${runContainer}'"
 				}
