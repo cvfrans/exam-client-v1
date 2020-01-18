@@ -11,7 +11,7 @@ pipeline {
    	}
 
    	stages {
-	   	stage('Build') {
+	   	stage('Build Project') {
 		    steps {
 				sh 'mvn clean install -Dmaven.test.skip=true'
 	        }
@@ -23,7 +23,6 @@ pipeline {
 		}
 		stage('Build Docker Image') {
 			steps {
-				sh '[ -z $(docker images ${DOCKERHUB_USER}/${IMAGE_NAME} -aq) ] || docker rmi -f $(docker images ${DOCKERHUB_USER}/${IMAGE_NAME} -aq)'
 				sh 'docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:1.0.0 .'
 				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
     				sh 'docker login -u ${DOCKERHUB_USER} -p ${dockerHubPwd}'    				
