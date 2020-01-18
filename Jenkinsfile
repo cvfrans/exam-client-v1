@@ -37,7 +37,7 @@ pipeline {
 		stage('Deploy Container') {
  			steps {
 				sshagent(['aws-ec2-ubuntu-id']) {										
-	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} ${stopContainer}'
+	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} [ -z $(docker ps -f "name=${env.CONTAINER_NAME}" -aq) ] || docker stop ${env.CONTAINER_NAME}'
 	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} ${deleteContainer}'
 	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} ${runContainer}'
 				}
