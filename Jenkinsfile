@@ -23,7 +23,7 @@ pipeline {
 		}
 		stage('Build Docker Image') {
 			steps {
-				sh 'docker rmi $(docker images ${DOCKERHUB_USER}/${IMAGE_NAME} -aq)'
+				sh '[ -z $(docker images ${DOCKERHUB_USER}/${IMAGE_NAME} -aq) ] || docker rmi -f $(docker images ${DOCKERHUB_USER}/${IMAGE_NAME} -aq)'
 				sh 'docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:1.0.0 .'
 				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
     				sh 'docker login -u ${DOCKERHUB_USER} -p ${dockerHubPwd}'    				
