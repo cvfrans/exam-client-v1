@@ -35,9 +35,9 @@ pipeline {
 		stage('Deploy Container') {
  			steps {
 				sshagent(['aws-ec2-ubuntu-id']) {
-					stopContainer = '[ -z $(docker ps -f "name=${env.CONTAINER_NAME}" -aq) ] || docker stop ${env.CONTAINER_NAME}'
-					deleteContainer = '[ -z $(docker container ls -aq) ] || docker rm ${env.CONTAINER_NAME}'
-					runContainer = 'docker run -d --name ${env.CONTAINER_NAME} -p 80:8080 ${env.DOCKERHUB_USER}/${env.IMAGE_NAME}'
+					stopContainer = '[ -z $(docker ps -f "name=${CONTAINER_NAME}" -aq) ] || docker stop ${CONTAINER_NAME}'
+					deleteContainer = '[ -z $(docker container ls -aq) ] || docker rm ${CONTAINER_NAME}'
+					runContainer = 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${DOCKERHUB_USER}/${IMAGE_NAME}'
 	    			
 					sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} '${stopContainer} | ${deleteContainer} | ${runContainer}'"
 				}
