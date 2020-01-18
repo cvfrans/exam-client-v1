@@ -1,3 +1,6 @@
+
+def sshScript = 'ssh -o StrictHostKeyChecking=no ${env.EC2_USER}@${env.EC2_PRIVATE_IP} uptime'
+
 pipeline {	
    	agent any
 
@@ -32,11 +35,7 @@ pipeline {
 		stage('Deploy Container') {
  			steps {
 				sshagent(['aws-ec2-ubuntu-id']) {										
-	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} uptime'
-	    			sh 'ssh -v ${EC2_USER}@${EC2_PRIVATE_IP}'
-	    			sh '[ -z $(docker ps -f "name=${CONTAINER_NAME}" -aq) ] || docker stop ${CONTAINER_NAME}'
-					sh '[ -z $(docker container ls -aq) ] || docker rm ${CONTAINER_NAME}'
-	    			sh 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${DOCKERHUB_USER}/${IMAGE_NAME}'
+	    			sh '${sshScript}'
 				}
 			}
 		}	
