@@ -1,7 +1,7 @@
 
-def stopContainer = "[ -z $(docker ps -f 'name=${env.CONTAINER_NAME}' -aq) ] || docker stop ${env.CONTAINER_NAME}"
-def deleteContainer = "[ -z $(docker container ls -aq) ] || docker rm ${env.CONTAINER_NAME}"
-def runContainer = "docker run -d --name ${env.CONTAINER_NAME} -p 80:8080 ${env.DOCKERHUB_USER}/${env.IMAGE_NAME}"
+def stopContainer = '[ -z $(docker ps -f "name=${env.CONTAINER_NAME}" -aq) ] || docker stop ${env.CONTAINER_NAME}'
+def deleteContainer = '[ -z $(docker container ls -aq) ] || docker rm ${env.CONTAINER_NAME}'
+def runContainer = 'docker run -d --name ${env.CONTAINER_NAME} -p 80:8080 ${env.DOCKERHUB_USER}/${env.IMAGE_NAME}'
 
 pipeline {	
    	agent any
