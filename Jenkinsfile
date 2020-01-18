@@ -1,24 +1,42 @@
 pipeline {
-   agent any   
-   stages {
+	def EC2_USER = 'ubuntu'
+	def EC2_PRIVATE_IP = '172.31.24.203'
+	def DOCKERHUB_USER = 'cvfrans'
+	def IMAGE_NAME = '${DOCKERHUB_USER}/exam-clientapp'
+	def CONTAINER_NAME = 'apiclient'
+   	agent any
+   	stages {
 	   	stage('Build') {
 		    steps {
-				sh "mvn clean install -Dmaven.test.skip=true"          
+				sh 'mvn clean install -Dmaven.test.skip=true'
 	        }
 	    }
 		stage('Unit Test') {
 			steps {
-				sh "mvn test"
+				sh 'mvn test'
 	        }
 		}
 		stage('Build Docker Image') {
 			steps {
-				sh "docker build -t cvfrans/exam-clientapp ."
+				sh 'docker build -t ${IMAGE_NAME} .'
 				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
-    				sh "docker login -u cvfrans -p ${dockerHubPwd}"    				
+    				sh 'docker login -u ${DOCKERHUB_USER} -p ${dockerHubPwd}'    				
 				}
-				sh "docker push cvfrans/exam-clientapp"
+				sh 'docker push ${IMAGE_NAME}'
 	        }
-		}		
-   }
+		}
+		stage('Deploy Container') {
+			def dockerRun = 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${IMAGE_NAME}'
+			sshagent(['aws-ec2-ubuntu-id']) {
+				sh 'docker stop ${CONTAINER_NAME}'
+				sh 'docker rm $(docker container ls -aq)'
+    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} ${dockerRun}'
+			}
+		}	
+   	}
+   	post {
+		always {
+   			cleanWs()
+   		}
+	}
 }
