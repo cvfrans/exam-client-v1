@@ -34,6 +34,8 @@ pipeline {
 				sshagent(['aws-ec2-ubuntu-id']) {										
 	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} uptime'
 	    			sh 'ssh -v ${EC2_USER}@${EC2_PRIVATE_IP}'
+	    			sh 'docker stop ${CONTAINER_NAME}'
+					sh 'docker rm $(docker container ls -aq)'
 	    			sh 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${DOCKERHUB_USER}/${IMAGE_NAME}'
 				}
 			}
