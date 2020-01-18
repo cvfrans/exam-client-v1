@@ -8,7 +8,7 @@ pipeline {
 		IMAGE_NAME = '${DOCKERHUB_USER}/exam-clientapp'
 		CONTAINER_NAME = 'apiclient'
    	}
-   	
+
    	stages {
 	   	stage('Build') {
 		    steps {
@@ -30,7 +30,7 @@ pipeline {
 	        }
 		}
 		stage('Deploy Container') {
-			def dockerRun = 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${IMAGE_NAME}'
+ 			dockerRun = 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${IMAGE_NAME}'
 			sshagent(['aws-ec2-ubuntu-id']) {
 				sh 'docker stop ${CONTAINER_NAME}'
 				sh 'docker rm $(docker container ls -aq)'
