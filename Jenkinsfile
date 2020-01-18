@@ -35,7 +35,7 @@ pipeline {
 					sh 'docker stop ${CONTAINER_NAME}'
 					sh 'docker rm $(docker container ls -aq)'
 	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP}'
-	    			sh 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${IMAGE_NAME}
+	    			sh 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${IMAGE_NAME}'
 				}
 			}
 		}	
