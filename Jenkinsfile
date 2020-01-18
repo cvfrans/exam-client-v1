@@ -33,11 +33,11 @@ pipeline {
 		stage('Deploy Container') {
  			steps {
 				sshagent(['aws-ec2-ubuntu-id']) {											    			
-	    			sh '''ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} << EOF
+	    			sh ''' "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} << EOF
 						[ -z $(docker ps -f "name=${env.CONTAINER_NAME}" -aq) ] || docker stop ${env.CONTAINER_NAME}
 						[ -z $(docker container ls -aq) ] || docker rm ${env.CONTAINER_NAME}
 						docker run -d --name ${env.CONTAINER_NAME} -p 80:8080 ${env.DOCKERHUB_USER}/${env.IMAGE_NAME}
-	    			EOF '''
+	    			EOF" '''
 				}
 			}
 		}	
