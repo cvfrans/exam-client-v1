@@ -10,6 +10,6 @@ public class ClientController {
 
 	@GetMapping(path="/listclientes", produces = "application/json")
 	public String listClientes() {
-		return "Any String YYY";
+		return "Any String ClientAPP";
 	}
 }
