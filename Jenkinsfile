@@ -1,4 +1,3 @@
-def containerFilter = 
 pipeline {	
    	agent any
 
