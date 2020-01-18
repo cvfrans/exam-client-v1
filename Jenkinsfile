@@ -23,11 +23,11 @@ pipeline {
 		}
 		stage('Build Docker Image') {
 			steps {
-				sh 'docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:1.0.0 .'
+				sh "docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:1.0.0 ."
 				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
-    				sh 'docker login -u ${DOCKERHUB_USER} -p ${dockerHubPwd}'    				
+    				sh "docker login -u ${DOCKERHUB_USER} -p ${dockerHubPwd}"
 				}
-				sh 'docker push ${DOCKERHUB_USER}/${IMAGE_NAME:1.0.0}'
+				sh "docker push ${DOCKERHUB_USER}/${IMAGE_NAME:1.0.0}"
 	        }
 		}
 		stage('Deploy Container') {
