@@ -1,10 +1,14 @@
-pipeline {
-	def EC2_USER = 'ubuntu'
-	def EC2_PRIVATE_IP = '172.31.24.203'
-	def DOCKERHUB_USER = 'cvfrans'
-	def IMAGE_NAME = '${DOCKERHUB_USER}/exam-clientapp'
-	def CONTAINER_NAME = 'apiclient'
+pipeline {	
    	agent any
+
+   	environment {
+   		EC2_USER = 'ubuntu'
+		EC2_PRIVATE_IP = '172.31.24.203'
+		DOCKERHUB_USER = 'cvfrans'
+		IMAGE_NAME = '${DOCKERHUB_USER}/exam-clientapp'
+		CONTAINER_NAME = 'apiclient'
+   	}
+   	
    	stages {
 	   	stage('Build') {
 		    steps {
