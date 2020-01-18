@@ -31,11 +31,12 @@ pipeline {
 	        }
 		}
 		stage('Deploy Container') {
- 			
-			sshagent(['aws-ec2-ubuntu-id']) {
-				sh 'docker stop ${CONTAINER_NAME}'
-				sh 'docker rm $(docker container ls -aq)'
-    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} ${dockerRun}'
+ 			steps {
+				sshagent(['aws-ec2-ubuntu-id']) {
+					sh 'docker stop ${CONTAINER_NAME}'
+					sh 'docker rm $(docker container ls -aq)'
+	    			sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_PRIVATE_IP} ${dockerRun}'
+				}
 			}
 		}	
    	}
