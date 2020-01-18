@@ -23,7 +23,7 @@ pipeline {
 		}
 		stage('Build Docker Image') {
 			steps {
-				sh 'docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME} .'
+				sh 'docker build -t ${stopContainer} .'
 				withCredentials([string(credentialsId: 'docker-hub-id', variable: 'dockerHubPwd')]) {
     				sh 'docker login -u ${DOCKERHUB_USER} -p ${dockerHubPwd}'    				
 				}
